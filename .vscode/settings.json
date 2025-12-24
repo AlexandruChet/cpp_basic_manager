@@ -1,0 +1,12 @@
+{
+  "C_Cpp.errorSquiggles": "disabled",
+  "cSpell.words": ["opperator", "strenght"],
+  "files.associations": {
+    "format": "cpp",
+    "optional": "cpp",
+    "iostream": "cpp",
+    "ctime": "cpp",
+    "iosfwd": "cpp",
+    "vector": "cpp"
+  }
+}
