@@ -76,16 +76,6 @@ public:
 
     void save_info_to_file() override
     {
-        string product, price;
-
-        cout << "Please write your product: ";
-        cin >> product;
-
-        cout << "Please write your price: ";
-        cin >> price;
-
-        user_products_information.push_back({product, price});
-
         ofstream productFile("product.txt");
         if (productFile.is_open())
         {
@@ -100,7 +90,18 @@ public:
         }
     }
 
-    void write_info() override {}
+    void write_info() override
+    {
+        string product, price;
+
+        cout << "Please write your product: ";
+        cin >> product;
+
+        cout << "Please write your price: ";
+        cin >> price;
+
+        user_products_information.push_back({product, price});
+    }
 };
 
 int main()
@@ -114,7 +115,10 @@ int main()
     cin >> answer;
 
     if (answer == 'A')
+    {
+        user->write_info();
         user->save_info_to_file();
+    }
 
     delete user;
     return 0;
