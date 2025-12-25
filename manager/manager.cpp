@@ -8,6 +8,13 @@
 
 using namespace std;
 
+struct Product
+{
+    int id;
+    string name;
+    string price;
+};
+
 class Entity
 {
 protected:
@@ -32,7 +39,7 @@ class User : public Entity
 {
 public:
     vector<variant<int, string>> reg_information;
-    vector<pair<string, string>> user_products_information;
+    vector<Product> user_products_information;
 
     User() : Entity("", "", 0, 0) {}
 
@@ -44,9 +51,7 @@ public:
         cout << "Please write your email: ";
         cin >> email;
 
-        srand(time(nullptr));
         id = rand() % 100000 + 1;
-
         cout << "Your id: " << id << endl;
 
         reg_information.push_back(name);
@@ -67,6 +72,7 @@ public:
                 else
                     outFile << get<string>(element) << " ";
             }
+            outFile << endl;
         }
         else
         {
@@ -74,14 +80,31 @@ public:
         }
     }
 
+    void write_info() override
+    {
+        Product p;
+        p.id = rand() % 10000 + 1;
+
+        cout << "Please write your product: ";
+        cin >> p.name;
+
+        cout << "Please write your price: ";
+        cin >> p.price;
+
+        user_products_information.push_back(p);
+    }
+
     void save_info_to_file() override
     {
         ofstream productFile("product.txt");
+
         if (productFile.is_open())
         {
             for (const auto &e : user_products_information)
             {
-                productFile << e.first << " " << e.second << endl;
+                productFile << e.id << " "
+                            << e.name << " "
+                            << e.price << endl;
             }
         }
         else
@@ -89,23 +112,12 @@ public:
             cerr << "Error opening product file" << endl;
         }
     }
-
-    void write_info() override
-    {
-        string product, price;
-
-        cout << "Please write your product: ";
-        cin >> product;
-
-        cout << "Please write your price: ";
-        cin >> price;
-
-        user_products_information.push_back({product, price});
-    }
 };
 
 int main()
 {
+    srand(time(nullptr));
+
     Entity *user = new User();
     user->registration();
     user->save_to_file();
