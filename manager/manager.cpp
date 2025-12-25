@@ -32,7 +32,7 @@ class User : public Entity
 {
 public:
     vector<variant<int, string>> reg_information;
-    vector<string> user_products_information;
+    vector<pair<string, string>> user_products_information;
 
     User() : Entity("", "", 0, 0) {}
 
@@ -45,7 +45,7 @@ public:
         cin >> email;
 
         srand(time(nullptr));
-        id = rand();
+        id = rand() % 100000 + 1;
 
         cout << "Your id: " << id << endl;
 
@@ -64,16 +64,42 @@ public:
             {
                 if (holds_alternative<int>(element))
                     outFile << get<int>(element) << " ";
-                else if (holds_alternative<string>(element))
+                else
                     outFile << get<string>(element) << " ";
             }
         }
         else
         {
-            cerr << "Error" << endl;
+            cerr << "Error opening file" << endl;
         }
     }
-    void save_info_to_file() override {}
+
+    void save_info_to_file() override
+    {
+        string product, price;
+
+        cout << "Please write your product: ";
+        cin >> product;
+
+        cout << "Please write your price: ";
+        cin >> price;
+
+        user_products_information.push_back({product, price});
+
+        ofstream productFile("product.txt");
+        if (productFile.is_open())
+        {
+            for (const auto &e : user_products_information)
+            {
+                productFile << e.first << " " << e.second << endl;
+            }
+        }
+        else
+        {
+            cerr << "Error opening product file" << endl;
+        }
+    }
+
     void write_info() override {}
 };
 
@@ -82,6 +108,13 @@ int main()
     Entity *user = new User();
     user->registration();
     user->save_to_file();
+
+    cout << "If you want to create product press A: ";
+    char answer;
+    cin >> answer;
+
+    if (answer == 'A')
+        user->save_info_to_file();
 
     delete user;
     return 0;
